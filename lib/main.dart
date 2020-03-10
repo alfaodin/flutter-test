@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:provider_test/page/user_page.dart';
 import 'package:provider_test/counter_provider.dart';
+import 'package:provider_test/page/stagger_animation.dart';
+
+import 'my_navbar.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,14 +19,19 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: MyHomePage(title: 'Flutter Demo Home Page'),
+        routes: {
+          '/': (BuildContext context) => StaggerDemo(),
+          '/userPage': (BuildContext context) => UserPage(),
+          '/stagger': (BuildContext context) => StaggerDemo(),
+        },
       ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key key, this.title = 'Flutter Demo Home Page'})
+      : super(key: key);
 
   final String title;
 
@@ -89,7 +98,8 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Icon(Icons.navigate_next),
           ),
         ],
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
+      bottomNavigationBar: MyNavBar(),
     );
   }
 
@@ -109,36 +119,31 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget testW(List<EconomicActivity> activities) {
     Widget testW = StreamBuilder(
-      stream: Provider.of<CounterNotifier>(context, listen: false)
-          .selectedActivity$
-          .stream,
+      stream:
+          Provider.of<CounterNotifier>(context, listen: false).selectedActivity,
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return DropdownButton<EconomicActivity>(
-            isExpanded: true,
-            hint: Text(
-              'Sector de actividad económica',
-              style: TextStyle(
-                color: Colors.black,
-              ),
+        return DropdownButton<EconomicActivity>(
+          isExpanded: true,
+          hint: Text(
+            'Sector de actividad económica',
+            style: TextStyle(
+              color: Colors.black,
             ),
-            value: snapshot.data,
-            items: activities.map((EconomicActivity value) {
-              return new DropdownMenuItem<EconomicActivity>(
-                value: value,
-                child: new Text(value.name),
-              );
-            }).toList(),
-            onChanged: (data) {
-              Provider.of<CounterNotifier>(context, listen: false)
-                  .selectedActivity$
-                  .sink
-                  .add(data);
-            },
-          );
-        } else {
-          return CircularProgressIndicator();
-        }
+          ),
+          value: snapshot.data,
+          items: activities.map((EconomicActivity value) {
+            return new DropdownMenuItem<EconomicActivity>(
+              value: value,
+              child: new Text(value.name),
+            );
+          }).toList(),
+          onChanged: (data) {
+            Provider.of<CounterNotifier>(context, listen: false)
+                .selectedActivity$
+                .sink
+                .add(data);
+          },
+        );
       },
     );
     return testW;
@@ -156,5 +161,11 @@ class _MyHomePageState extends State<MyHomePage> {
     for (int i = 1; i <= to; i++) {
       yield i;
     }
+  }
+
+  @override
+  void dispose() {
+    Provider.of<CounterNotifier>(context, listen: false).dispose();
+    super.dispose();
   }
 }

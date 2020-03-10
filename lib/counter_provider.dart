@@ -16,8 +16,28 @@ class CounterNotifier extends ChangeNotifier {
 
   int get counter => _counter;
 
+  final streamTransformer =
+      StreamTransformer<EconomicActivity, EconomicActivity>.fromHandlers(
+    handleData: (EconomicActivity data, EventSink sink) {
+      if (data != null) {
+        sink.add(data);
+      } else {
+        sink.addError('Contraseña necesita más de 6 caracteres.');
+      }
+    },
+    handleError: (error, stacktrace, sink) {
+      sink.addError('Something went wrong: $error');
+    },
+    handleDone: (sink) {
+      sink.close();
+    },
+  );
+
   Stream<List<EconomicActivity>> get chuckListStream =>
       _chuckListController.stream;
+
+  Stream<EconomicActivity> get selectedActivity =>
+      selectedActivity$.stream.transform(streamTransformer);
 
   void incrementCounter() {
     _counter++;
@@ -32,6 +52,7 @@ class CounterNotifier extends ChangeNotifier {
   void dispose() {
     _chuckListController.close();
     selectedActivity$.close();
+    super.dispose();
   }
 
   void getEconomicActivities() {
@@ -43,7 +64,6 @@ class CounterNotifier extends ChangeNotifier {
         EconomicActivity(4, 'test4'),
         EconomicActivity(5, 'test5'),
       ];
-      selectedActivity$.sink.add(result[3]);
       _chuckListController.sink.add(result);
     });
   }

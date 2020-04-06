@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:provider_test/page/parallax.dart';
 import 'package:provider_test/page/user_page.dart';
 import 'package:provider_test/counter_provider.dart';
 import 'package:provider_test/page/stagger_animation.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         routes: {
-          '/': (BuildContext context) => StaggerDemo(),
+          '/': (BuildContext context) => MyHomePage(),
           '/userPage': (BuildContext context) => UserPage(),
           '/stagger': (BuildContext context) => StaggerDemo(),
         },
@@ -59,46 +60,47 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Consumer<CounterNotifier>(
-              builder: (BuildContext context, CounterNotifier counter,
-                  Widget witget) {
-                return Text(
-                  '${counter.counter}',
-                  style: Theme.of(context).textTheme.display1,
-                );
-              },
-            ),
-            test(),
-          ],
-        ),
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          FloatingActionButton(
-            onPressed: _callRestData,
-            tooltip: 'Call Economic Activities',
-            child: Icon(Icons.perm_phone_msg),
-          ),
-          FloatingActionButton(
-            onPressed: _decrementCounter,
-            tooltip: 'Decrement',
-            child: Icon(Icons.navigate_before),
-          ),
-          FloatingActionButton(
-            onPressed: _incrementCounter,
-            tooltip: 'Increment',
-            child: Icon(Icons.navigate_next),
-          ),
-        ],
-      ),
+      body: Parallax(),
+      // body: Center(
+      //   child: Column(
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: <Widget>[
+      //       Text(
+      //         'You have pushed the button this many times:',
+      //       ),
+      //       Consumer<CounterNotifier>(
+      //         builder: (BuildContext context, CounterNotifier counter,
+      //             Widget witget) {
+      //           return Text(
+      //             '${counter.counter}',
+      //             style: Theme.of(context).textTheme.display1,
+      //           );
+      //         },
+      //       ),
+      //       test(),
+      //     ],
+      //   ),
+      // ),
+      // floatingActionButton: Row(
+      //   mainAxisAlignment: MainAxisAlignment.end,
+      //   children: <Widget>[
+      //     FloatingActionButton(
+      //       onPressed: _callRestData,
+      //       tooltip: 'Call Economic Activities',
+      //       child: Icon(Icons.perm_phone_msg),
+      //     ),
+      //     FloatingActionButton(
+      //       onPressed: _decrementCounter,
+      //       tooltip: 'Decrement',
+      //       child: Icon(Icons.navigate_before),
+      //     ),
+      //     FloatingActionButton(
+      //       onPressed: _incrementCounter,
+      //       tooltip: 'Increment',
+      //       child: Icon(Icons.navigate_next),
+      //     ),
+      //   ],
+      // ),
       bottomNavigationBar: MyNavBar(),
     );
   }
